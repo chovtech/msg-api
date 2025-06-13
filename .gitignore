@@ -1,0 +1,9 @@
+# .gitignore
+node_modules/
+.env
+logs/
+*.log
+*.pid
+.DS_Store
+.wwebjs_auth/ 
+.wwebjs_cache/ 
