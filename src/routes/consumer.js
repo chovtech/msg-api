@@ -8,23 +8,34 @@ const axios = require('axios');
 const whatsappClients = new Map();
 
 async function initWhatsAppClient(userId, sessionId) {
+    
     // Return existing ready client if available
     if (whatsappClients.has(userId)) {
-        const client = whatsappClients.get(userId);
-        if (client.info) return client;
-        throw new Error(`Client for user ${userId} exists but not ready`);
+    const client = whatsappClients.get(userId);
+    if (client.info) return client;
+    // Client exists but never became ready — remove it and reinitialize
+    whatsappClients.delete(userId);
     }
 
     const client = new Client({
-        authStrategy: new LocalAuth({ clientId: sessionId }),
-        puppeteer: {
+    authStrategy: new LocalAuth({ 
+        clientId: sessionId,
+        dataPath: '/app/.wwebjs_auth'
+    }),
+    puppeteer: {
             headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu',
+                '--no-first-run',
+                '--no-zygote',
+                '--single-process',
+                '--user-data-dir=/tmp/chrome-worker',
+            ],
         },
-        webVersionCache: {
-            type: 'remote',
-            remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html'
-        }
     });
 
     whatsappClients.set(userId, client);

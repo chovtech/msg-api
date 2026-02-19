@@ -6,17 +6,21 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
 const qrcodeTerminal = require('qrcode-terminal');
 
-// Track WhatsApp client sessions
+// ─────────────────────────────────────────────
+// In-memory store of active WhatsApp clients
+// ─────────────────────────────────────────────
 const clients = {};
 
 router.post('/:userId/:phoneNumber', authVendor, async (req, res) => {
   const { userId, phoneNumber } = req.params;
   const apiConsumerId = req.apiConsumerId;
 
-  // Get Socket.IO instance from app
   const io = req.app.get('io');
   const activeConnections = req.app.get('activeConnections');
 
+  // ─────────────────────────────────────────────
+  // 1. Database checks
+  // ─────────────────────────────────────────────
   try {
     const [results] = await db.query(
       `
@@ -73,98 +77,230 @@ router.post('/:userId/:phoneNumber', authVendor, async (req, res) => {
       });
     }
 
-
+    // ─────────────────────────────────────────────
+    // 2. Prevent duplicate sessions
+    // ─────────────────────────────────────────────
     const sessionId = `${apiConsumerId}-${userId}-${phoneNumber}`;
 
-    // Prevent double connections
     if (clients[sessionId]) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         status: 'error',
-        message: 'Session already being initialized, Wait to get QR code.', 
+        message: 'Session already being initialized. Please wait for the QR code.',
       });
     }
 
+    // ─────────────────────────────────────────────
+    // 3. Create WhatsApp client with correct Puppeteer config
+    //    --disable-dev-shm-usage is the most critical flag for Docker VPS
+    // ─────────────────────────────────────────────
     const client = new Client({
-      authStrategy: new LocalAuth({ clientId: sessionId }),
-      puppeteer: { headless: true, args: ['--no-sandbox'] }
+      authStrategy: new LocalAuth({
+        clientId: sessionId,
+        dataPath: '/app/.wwebjs_auth',
+      }),
+      puppeteer: {
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--disable-gpu',
+          '--no-first-run',
+          '--no-zygote',
+          '--single-process',
+        ],
+      },
     });
 
-    
-
+    // Store immediately to block duplicate requests
     clients[sessionId] = client;
-    // First, respond that QR generation is starting
+
+    // ─────────────────────────────────────────────
+    // 4. Respond immediately — QR will come via Socket.IO
+    // ─────────────────────────────────────────────
     res.status(200).json({
       status: 'processing',
       message: 'Generating QR code...',
-      session_id: sessionId
+      session_id: sessionId,
     });
 
+    // ─────────────────────────────────────────────
+    // 5. Failsafe: destroy client if READY never fires within 90 seconds
+    // ─────────────────────────────────────────────
+    const readyTimeout = setTimeout(async () => {
+      if (clients[sessionId]) {
+        console.error(`[TIMEOUT] ${sessionId} — never reached READY after 90s. Destroying.`);
+
+        // Log what URL the browser was stuck on (helpful for debugging)
+        try {
+          if (client.pupPage) {
+            const url = client.pupPage.url();
+            console.error(`[TIMEOUT] Browser was stuck on: ${url}`);
+          }
+        } catch (_) {}
+
+        try {
+          await client.destroy();
+        } catch (e) {
+          console.error(`[TIMEOUT] Error during destroy:`, e.message);
+        }
+
+        delete clients[sessionId];
+
+        const userSocketId = activeConnections[userId];
+        if (userSocketId) {
+          io.to(userSocketId).emit('connection_update', {
+            status: 'timeout',
+            message: 'Connection timed out. Please try again.',
+          });
+        }
+      }
+    }, 90_000);
+
+    // ─────────────────────────────────────────────
+    // 6. WhatsApp Events
+    // ─────────────────────────────────────────────
+
+    // QR code generated — send to frontend via Socket.IO
     client.on('qr', async (qr) => {
       qrcodeTerminal.generate(qr, { small: true });
-      const qrImage = await qrcode.toDataURL(qr);
+      console.log(`[QR] Generated for ${sessionId}`);
 
-      // Emit to the specific user if their socket is connected
-      const userSocketId = activeConnections[userId];
-      if (userSocketId) {
-        io.to(userSocketId).emit('qr_generated', {
-          status: 'success',
-          message: 'Scan the QR to connect',
-          session_id: sessionId,
-          qr_code: qrImage,
-          data: {
-            app_user_id: record.app_user_id,
-            whatsapp_number_id: record.whatsapp_number_id,
-            active_numbers: record.active_numbers,
-            allowed_max: record.max_phone_numbers
-          }
-        });
-      } else {
-        console.warn(`User ${userId} has no active socket connection`);
+      try {
+        const qrImage = await qrcode.toDataURL(qr);
+        const userSocketId = activeConnections[userId];
+
+        if (userSocketId) {
+          io.to(userSocketId).emit('qr_generated', {
+            status: 'success',
+            message: 'Scan the QR code to connect WhatsApp',
+            session_id: sessionId,
+            qr_code: qrImage,
+            data: {
+              app_user_id: record.app_user_id,
+              whatsapp_number_id: record.whatsapp_number_id,
+              active_numbers: record.active_numbers,
+              allowed_max: record.max_phone_numbers,
+            },
+          });
+        } else {
+          console.warn(`[QR] User ${userId} has no active socket — QR printed to terminal only`);
+        }
+      } catch (err) {
+        console.error(`[QR] Failed to generate QR image for ${sessionId}:`, err.message);
       }
     });
 
-    client.on('ready', async () => {
-      console.log(`[✅ CONNECTED] ${sessionId}`);
-      
-      // Update DB
-      await db.query(`
-        UPDATE whatsapp_numbers
-        SET session_id = ?, is_active = 1
-        WHERE app_user_id = ? AND phone_number = ?
-      `, [sessionId, userId, phoneNumber]);
+    // Authenticated — session restored or QR scanned successfully
+    client.on('authenticated', () => {
+      console.log(`[AUTHENTICATED] ${sessionId}`);
 
-      // Notify client of successful connection
+      // Attach browser-level error listeners so we can see if Chromium crashes
+      // before reaching "ready"
+      try {
+        if (client.pupPage) {
+          client.pupPage.on('error', (err) =>
+            console.error(`[BROWSER CRASH] ${sessionId}:`, err.message)
+          );
+          client.pupPage.on('pageerror', (err) =>
+            console.error(`[PAGE ERROR] ${sessionId}:`, err.message)
+          );
+          client.pupPage.on('console', (msg) => {
+            if (msg.type() === 'error') {
+              console.error(`[BROWSER CONSOLE ERROR] ${sessionId}:`, msg.text());
+            }
+          });
+        }
+      } catch (_) {}
+    });
+
+    // Loading screen — shows progress between authenticated and ready
+    client.on('loading_screen', (percent, message) => {
+      console.log(`[LOADING] ${sessionId} — ${percent}% — ${message}`);
+    });
+
+    // State changes — useful for seeing exactly where it stalls
+    client.on('change_state', (state) => {
+      console.log(`[STATE] ${sessionId} →`, state);
+    });
+
+    // Auth failure — bad session data, need to re-scan
+    client.on('auth_failure', async (msg) => {
+      console.error(`[AUTH FAILURE] ${sessionId}:`, msg);
+      clearTimeout(readyTimeout);
+      delete clients[sessionId];
+
+      const userSocketId = activeConnections[userId];
+      if (userSocketId) {
+        io.to(userSocketId).emit('connection_update', {
+          status: 'auth_failure',
+          message: 'Authentication failed. Please try connecting again.',
+        });
+      }
+    });
+
+    // Ready — WhatsApp fully loaded, safe to update DB
+    client.on('ready', async () => {
+      clearTimeout(readyTimeout);
+      console.log(`[✅ READY] ${sessionId}`);
+
+      try {
+        await db.query(
+          `UPDATE whatsapp_numbers
+           SET session_id = ?, is_active = 1
+           WHERE app_user_id = ? AND phone_number = ?`,
+          [sessionId, userId, phoneNumber]
+        );
+        console.log(`[DB] Updated is_active=1 for ${sessionId}`);
+      } catch (err) {
+        console.error(`[DB] Failed to update after ready:`, err.message);
+      }
+
       const userSocketId = activeConnections[userId];
       if (userSocketId) {
         io.to(userSocketId).emit('connection_update', {
           status: 'connected',
-          message: 'WhatsApp client is now ready!'
+          message: 'WhatsApp is now connected!',
         });
       }
     });
 
-    client.on('disconnected', (reason) => {
+    // Disconnected — clean up
+    client.on('disconnected', async (reason) => {
+      clearTimeout(readyTimeout);
       console.log(`[❌ DISCONNECTED] ${sessionId}:`, reason);
       delete clients[sessionId];
-      
+
+      try {
+        await db.query(
+          `UPDATE whatsapp_numbers SET is_active = 0, session_id = NULL
+           WHERE app_user_id = ? AND phone_number = ?`,
+          [userId, phoneNumber]
+        );
+      } catch (err) {
+        console.error(`[DB] Failed to update after disconnect:`, err.message);
+      }
+
       const userSocketId = activeConnections[userId];
       if (userSocketId) {
         io.to(userSocketId).emit('connection_update', {
           status: 'disconnected',
-          message: 'WhatsApp client was disconnected'
+          message: 'WhatsApp was disconnected.',
         });
       }
     });
 
+    // ─────────────────────────────────────────────
+    // 7. Start the client
+    // ─────────────────────────────────────────────
     client.initialize();
 
-    
-
-   } catch (err) {
-    console.error('Error:', err);
+  } catch (err) {
+    console.error('[ROUTE ERROR]', err);
     return res.status(500).json({
       status: 'error',
-      message: 'Internal server error',
+      message: 'Internal server error.',
     });
   }
 });

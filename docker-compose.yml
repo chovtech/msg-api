@@ -1,0 +1,94 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: wamator_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: whatsappapi
+      MYSQL_USER: wamator
+      MYSQL_PASSWORD: wamator_pass_change_me
+      MYSQL_ROOT_PASSWORD: root_pass_change_me
+    volumes:
+      - wamator_mysql_data:/var/lib/mysql
+    networks:
+      - wamator_net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: wamator_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "127.0.0.1:9081:80"
+    depends_on:
+      - mysql
+    networks:
+      - wamator_net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: wamator_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: wamator
+      RABBITMQ_DEFAULT_PASS: wamator_rmq_pass_change_me
+    ports:
+      - "127.0.0.1:15672:15672"
+    networks:
+      - wamator_net
+
+  api:
+    build: .
+    container_name: wamator_api
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - rabbitmq
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: wamator
+      DB_PASSWORD: wamator_pass_change_me
+      DB_NAME: whatsappapi
+      RABBITMQ_URL: amqp://wamator:wamator_rmq_pass_change_me@rabbitmq:5672
+      
+    ports:
+      - "127.0.0.1:3000:3000"
+    shm_size: '256mb'   # Add this line
+    volumes:
+      - wamator_sessions:/app/.wwebjs_auth
+    networks:
+      - wamator_net
+
+  worker:
+    build: .
+    container_name: wamator_worker
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - rabbitmq
+    environment:
+      NODE_ENV: production
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: wamator
+      DB_PASSWORD: wamator_pass_change_me
+      DB_NAME: whatsappapi
+      RABBITMQ_URL: amqp://wamator:wamator_rmq_pass_change_me@rabbitmq:5672
+    shm_size: '256mb'
+    volumes:
+      - wamator_sessions:/app/.wwebjs_auth
+    command: ["node", "src/routes/consumer.js"]
+    networks:
+      - wamator_net
+
+networks:
+  wamator_net:
+
+volumes:
+  wamator_mysql_data:
+  wamator_sessions:

@@ -56,12 +56,12 @@ app.use(cors());
 app.use(express.json());
 
 // Mount routes
-app.use('/api/vendors', vendorRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/whatsapp-numbers', whatsappNumberRoutes);
-app.use('/api/connect', connectRoutes);
-app.use('/api/messages', publisherRoutes);
-app.use('/api/contacts', contactRoutes);
+app.use('/vendors', vendorRoutes);
+app.use('/users', userRoutes);
+app.use('//whatsapp-numbers', whatsappNumberRoutes);
+app.use('/connect', connectRoutes);
+app.use('/messages', publisherRoutes);
+app.use('/contacts', contactRoutes);
 
 // Test route
 app.get('/', async (req, res) => {
