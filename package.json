@@ -21,16 +21,16 @@
     "libphonenumber-js": "^1.12.9",
     "mime-types": "^3.0.1",
     "mysql2": "^3.14.1",
+    "puppeteer": "^24.37.5",
     "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "socket.io": "^4.8.1",
     "uuid": "^9.0.1",
     "validator": "^13.15.0",
-    "puppeteer": "^21.11.0",
     "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js",
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^1.0.2"
   }
 }

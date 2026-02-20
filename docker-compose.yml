@@ -64,28 +64,6 @@ services:
     networks:
       - wamator_net
 
-  worker:
-    build: .
-    container_name: wamator_worker
-    restart: unless-stopped
-    depends_on:
-      - mysql
-      - rabbitmq
-    environment:
-      NODE_ENV: production
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_USER: wamator
-      DB_PASSWORD: wamator_pass_change_me
-      DB_NAME: whatsappapi
-      RABBITMQ_URL: amqp://wamator:wamator_rmq_pass_change_me@rabbitmq:5672
-    shm_size: '256mb'
-    volumes:
-      - wamator_sessions:/app/.wwebjs_auth
-    command: ["node", "src/routes/consumer.js"]
-    networks:
-      - wamator_net
-
 networks:
   wamator_net:
 

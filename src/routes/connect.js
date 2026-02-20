@@ -306,3 +306,4 @@ router.post('/:userId/:phoneNumber', authVendor, async (req, res) => {
 });
 
 module.exports = router;
+module.exports.clients = clients;
