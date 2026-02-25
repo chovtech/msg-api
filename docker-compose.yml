@@ -55,7 +55,7 @@ services:
       DB_PASSWORD: wamator_pass_change_me
       DB_NAME: whatsappapi
       RABBITMQ_URL: amqp://wamator:wamator_rmq_pass_change_me@rabbitmq:5672
-      
+      FRONTEND_URL: http://localhost:8080
     ports:
       - "127.0.0.1:3000:3000"
     shm_size: '256mb'   # Add this line

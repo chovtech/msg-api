@@ -168,7 +168,7 @@ router.post('/:userId/:phoneNumber', authVendor, async (req, res) => {
       console.log(`[QR] Generated for ${sessionId}`);
 
       try {
-        const qrImage = await qrcode.toDataURL(qr);
+        const qrImage = await qrcode.toDataURL(qr, { width: 512, margin: 2 });
         const userSocketId = activeConnections[userId];
 
         if (userSocketId) {
@@ -196,8 +196,14 @@ router.post('/:userId/:phoneNumber', authVendor, async (req, res) => {
     client.on('authenticated', () => {
       console.log(`[AUTHENTICATED] ${sessionId}`);
 
-      // Attach browser-level error listeners so we can see if Chromium crashes
-      // before reaching "ready"
+      const userSocketId = activeConnections[userId];
+      if (userSocketId) {
+        io.to(userSocketId).emit('connection_update', {
+          status: 'authenticated',
+          message: 'QR code scanned! Loading WhatsApp...',
+        });
+      }
+
       try {
         if (client.pupPage) {
           client.pupPage.on('error', (err) =>
@@ -218,6 +224,15 @@ router.post('/:userId/:phoneNumber', authVendor, async (req, res) => {
     // Loading screen — shows progress between authenticated and ready
     client.on('loading_screen', (percent, message) => {
       console.log(`[LOADING] ${sessionId} — ${percent}% — ${message}`);
+
+      const userSocketId = activeConnections[userId];
+      if (userSocketId) {
+        io.to(userSocketId).emit('connection_update', {
+          status: 'loading',
+          message: `Loading WhatsApp... ${percent}%`,
+          percent,
+        });
+      }
     });
 
     // State changes — useful for seeing exactly where it stalls

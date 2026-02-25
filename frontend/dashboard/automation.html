@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wamator | Automation Workflows</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="/assets/css/tailwind-config.js"></script>
+<link rel="stylesheet" href="/assets/css/app.css"/>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/auth.js"></script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #137fec;
+        }
+        .toggle-checkbox:checked + .toggle-label::after {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+<div class="flex">
+<!-- Sidebar -->
+<aside class="w-64 h-screen bg-white dark:bg-slate-900 border-r border-primary/10 sticky top-0 hidden lg:flex flex-col">
+<div class="p-6">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-icons text-white text-sm">bolt</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-primary">Wamator</span>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center space-x-3 p-3 text-slate-500 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors" href="/dashboard/">
+<span class="material-icons">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors" href="/dashboard/contacts.html">
+<span class="material-icons">people_outline</span>
+<span class="font-medium">Contacts</span>
+</a>
+<a class="flex items-center space-x-3 p-3 bg-primary/10 text-primary rounded-lg" href="/dashboard/automation.html">
+<span class="material-icons">auto_awesome</span>
+<span class="font-medium">Automations</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors" href="#">
+<span class="material-icons">campaign</span>
+<span class="font-medium">Campaigns</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 hover:bg-primary/5 hover:text-primary rounded-lg transition-colors" href="#">
+<span class="material-icons">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-primary/10">
+<div class="flex items-center space-x-3 p-3">
+<div id="sidebar-avatar" class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">U</div>
+<div class="flex-1">
+<p id="sidebar-name" class="text-sm font-semibold truncate">User</p>
+<p id="sidebar-plan" class="text-xs text-slate-500 truncate">Free Plan</p>
+</div>
+<button onclick="WamatorAuth.logout()" title="Logout" class="text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-icons text-sm">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8">
+<div class="max-w-5xl mx-auto">
+<!-- Header -->
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">Automation Workflows</h1>
+<p class="text-slate-500 mt-1">Design and manage your WhatsApp customer journeys</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg flex items-center justify-center space-x-2 transition-all shadow-lg shadow-primary/20">
+<span class="material-icons text-sm">add</span>
+<span class="font-semibold">Create Workflow</span>
+</button>
+</header>
+<!-- Search and Filter -->
+<div class="flex flex-col sm:flex-row items-center gap-4 mb-6">
+<div class="relative flex-1 w-full">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Search workflows..." type="text"/>
+</div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<select class="w-full sm:w-40 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary outline-none text-slate-600 dark:text-slate-300">
+<option>All Status</option>
+<option>Active</option>
+<option>Draft</option>
+</select>
+<button class="p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-500 hover:text-primary transition-colors">
+<span class="material-icons">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Workflow List -->
+<div id="workflow-list" class="space-y-4">
+<!-- Empty state -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-12 text-center">
+<div class="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center text-primary mx-auto mb-4">
+<span class="material-icons text-3xl">auto_awesome</span>
+</div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">No workflows yet</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                            Automation workflows will appear here once created. This feature is coming soon.
+                        </p>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+(async function () {
+  var auth = await WamatorAuth.requireAuth();
+  if (!auth) return;
+  var vendor = auth.vendor;
+  var avatar = document.getElementById('sidebar-avatar');
+  var nameEl = document.getElementById('sidebar-name');
+  var planEl = document.getElementById('sidebar-plan');
+  if (avatar) avatar.textContent = (vendor.name || 'U')[0].toUpperCase();
+  if (nameEl) nameEl.textContent = vendor.name || 'User';
+  if (planEl) planEl.textContent = vendor.company_name || 'Free Plan';
+})();
+</script>
+</body></html>

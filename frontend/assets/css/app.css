@@ -1,0 +1,71 @@
+/* Wamator — Shared Custom Styles */
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Form input focus state */
+.form-input-focus {
+  transition: all 0.15s ease;
+}
+.form-input-focus:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(19, 127, 236, 0.2);
+  border-color: #137fec;
+}
+
+/* QR code section gradient */
+.qr-gradient {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* Floating animation (used on success page) */
+@keyframes subtle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.float-animation {
+  animation: subtle-float 3s ease-in-out infinite;
+}
+
+/* Toggle switch */
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #137fec;
+}
+.toggle-checkbox:checked + .toggle-label::after {
+  transform: translateX(100%);
+}
+
+/* Error message */
+.form-error {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  transform: translateY(200%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+.toast.show {
+  transform: translateY(0);
+}

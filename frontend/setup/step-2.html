@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wamator Onboarding - Connect WhatsApp</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="/assets/css/tailwind-config.js"></script>
+<link href="/assets/css/app.css" rel="stylesheet"/>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<header class="w-full py-6 px-8 flex justify-between items-center">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-icons-outlined text-3xl">hub</span>
+<span class="text-xl font-bold tracking-tight">Wamator</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</div>
+<div class="w-12 h-1 bg-primary rounded-full"></div>
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">2</div>
+<div class="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-400 flex items-center justify-center text-xs font-bold">3</div>
+</div>
+<span class="text-sm font-medium text-slate-500 ml-2">Step 2 of 3</span>
+</div>
+</header>
+<main class="flex-1 flex items-center justify-center p-6">
+<div class="max-w-2xl w-full">
+<div class="text-center mb-10">
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Connect your WhatsApp number</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Enter your WhatsApp number, then scan the QR code to link your account.</p>
+</div>
+<div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-700 p-10 relative overflow-hidden">
+<div class="flex flex-col items-center">
+
+<!-- Phone number input (shown before QR) -->
+<div id="phone-input-section" class="w-full max-w-sm mb-8">
+<label for="whatsapp-phone" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">WhatsApp Phone Number</label>
+<input id="whatsapp-phone" type="tel" placeholder="e.g. 2348012345678" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-lg font-medium tracking-wide" />
+<p class="text-xs text-slate-400 mt-2">Enter the full number with country code, no + or spaces</p>
+<button id="connect-btn" class="w-full mt-4 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+<span class="material-icons-outlined text-sm">qr_code_2</span>
+Generate QR Code
+</button>
+<p id="connect-error" class="text-sm text-red-500 mt-2 hidden"></p>
+</div>
+
+<!-- QR code display (hidden until QR arrives) -->
+<div id="qr-section" class="hidden flex flex-col items-center w-full">
+<div class="relative group">
+<div id="qr-container" class="w-80 h-80 sm:w-96 sm:h-96 bg-white dark:bg-slate-900 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center relative mb-8 mx-auto">
+<!-- QR placeholder -->
+<div id="qr-placeholder" class="flex flex-col items-center">
+<span class="material-symbols-outlined text-8xl text-slate-200 dark:text-slate-700">qr_code_2</span>
+<p class="text-sm text-slate-400 mt-2">QR code loading...</p>
+</div>
+<img id="qr-image" class="hidden w-full h-full object-contain p-4 rounded-2xl" alt="QR Code"/>
+</div>
+</div>
+</div>
+
+<div id="status-indicator" class="flex items-center gap-3 px-4 py-2 bg-slate-50 dark:bg-slate-900/50 rounded-full border border-slate-100 dark:border-slate-700 mb-8">
+<span id="status-dot" class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+</span>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300" id="status-text">Enter your WhatsApp number above</span>
+</div>
+<div id="instructions" class="hidden w-full space-y-4">
+<div class="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+<div class="bg-primary/10 text-primary w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+<span class="text-sm font-bold">1</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Open <span class="font-semibold text-slate-800 dark:text-slate-200">WhatsApp</span> on your phone</p>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+<div class="bg-primary/10 text-primary w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+<span class="text-sm font-bold">2</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Tap <span class="font-semibold text-slate-800 dark:text-slate-200">Menu</span> or <span class="font-semibold text-slate-800 dark:text-slate-200">Settings</span> and select <span class="font-semibold text-slate-800 dark:text-slate-200">Linked Devices</span></p>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-colors">
+<div class="bg-primary/10 text-primary w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+<span class="text-sm font-bold">3</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Point your phone at the QR code above to scan it</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex flex-col items-center gap-4">
+<button onclick="window.location.href='/setup/step-3.html'" class="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white text-sm font-medium transition-colors underline underline-offset-4 decoration-slate-300">
+                    Skip for now
+                </button>
+<p class="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1">
+<span class="material-icons-outlined text-sm">lock</span>
+                    Your messages are end-to-end encrypted and never stored on our servers.
+                </p>
+</div>
+</div>
+</main>
+<footer class="py-8 text-center">
+<p class="text-sm text-slate-400">Need help? <a class="text-primary hover:underline" href="#">Contact our support team</a></p>
+</footer>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/socket.js"></script>
+<script>
+  (async () => {
+    const auth = await WamatorAuth.requireAuth();
+    if (!auth) return;
+    const { vendor, appUser } = auth;
+
+    const statusText = document.getElementById('status-text');
+    const qrPlaceholder = document.getElementById('qr-placeholder');
+    const qrImage = document.getElementById('qr-image');
+    const qrContainer = document.getElementById('qr-container');
+    const phoneInput = document.getElementById('whatsapp-phone');
+    const connectBtn = document.getElementById('connect-btn');
+    const connectError = document.getElementById('connect-error');
+    const phoneInputSection = document.getElementById('phone-input-section');
+    const qrSection = document.getElementById('qr-section');
+    const instructions = document.getElementById('instructions');
+    const statusDot = document.getElementById('status-dot');
+
+    // Pre-fill with vendor phone number
+    if (vendor.phone_number) {
+      phoneInput.value = vendor.phone_number;
+    }
+
+    // Connect Socket.IO and register for events
+    WamatorSocket.connect();
+    WamatorSocket.registerUser(appUser.id);
+
+    // Listen for QR code from backend
+    WamatorSocket.onQrGenerated((data) => {
+      if (data.qr_code) {
+        qrPlaceholder.classList.add('hidden');
+        qrImage.src = data.qr_code;
+        qrImage.classList.remove('hidden');
+        qrContainer.classList.remove('border-dashed');
+        qrContainer.classList.add('border-solid', 'border-primary/30');
+        statusText.textContent = 'Scan this QR code with WhatsApp';
+      }
+    });
+
+    // Listen for connection status updates from backend
+    WamatorSocket.onConnectionUpdate((data) => {
+      if (data.status === 'authenticated') {
+        // QR scanned — immediate feedback
+        statusText.textContent = 'QR scanned! Loading WhatsApp...';
+        statusDot.innerHTML = '<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>';
+        qrImage.classList.add('opacity-30');
+      } else if (data.status === 'loading') {
+        // Loading progress
+        statusText.textContent = data.message || 'Loading WhatsApp...';
+      } else if (data.status === 'connected' || data.status === 'ready') {
+        // Fully connected — redirect
+        statusText.textContent = 'WhatsApp connected successfully!';
+        statusDot.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>';
+        document.getElementById('status-indicator').classList.add('border-green-200', 'bg-green-50');
+        qrImage.classList.add('hidden');
+        qrContainer.innerHTML = '<div class="flex flex-col items-center"><span class="material-icons-outlined text-7xl text-green-500">check_circle</span><p class="text-green-600 font-semibold mt-3">Connected!</p></div>';
+        setTimeout(() => {
+          window.location.href = '/setup/step-3.html';
+        }, 2000);
+      } else if (data.status === 'timeout') {
+        statusText.textContent = 'Connection timed out. Please try again.';
+        connectBtn.disabled = false;
+        connectBtn.textContent = 'Try Again';
+        phoneInputSection.classList.remove('hidden');
+      } else if (data.status === 'auth_failure') {
+        statusText.textContent = 'Authentication failed. Please try again.';
+        connectBtn.disabled = false;
+        connectBtn.textContent = 'Try Again';
+        phoneInputSection.classList.remove('hidden');
+      } else if (data.status === 'disconnected') {
+        statusText.textContent = 'Disconnected. Please try again.';
+        connectBtn.disabled = false;
+        connectBtn.textContent = 'Try Again';
+        phoneInputSection.classList.remove('hidden');
+      }
+    });
+
+    // Handle connect button click
+    connectBtn.addEventListener('click', async () => {
+      const phoneNumber = phoneInput.value.trim().replace(/[\s\-\+\(\)]/g, '');
+      if (!phoneNumber || phoneNumber.length < 10) {
+        connectError.textContent = 'Please enter a valid phone number with country code.';
+        connectError.classList.remove('hidden');
+        return;
+      }
+
+      connectError.classList.add('hidden');
+      connectBtn.disabled = true;
+      connectBtn.innerHTML = '<span class="animate-spin material-icons-outlined text-sm">refresh</span> Connecting...';
+      statusText.textContent = 'Registering WhatsApp number...';
+
+      try {
+        // Step 1: Ensure user has a subscription (auto-assigns Free Plan if none)
+        await WamatorAPI.post(`/users/${appUser.id}/ensure-subscription`);
+
+        // Step 2: Register the WhatsApp number (if not already registered)
+        try {
+          await WamatorAPI.post(`/whatsapp-numbers/${appUser.id}/add`, {
+            label: 'Primary',
+            phone_number: phoneNumber,
+          });
+        } catch (addErr) {
+          // 409 = already exists — that's fine, continue to connect
+          if (addErr.status !== 409) throw addErr;
+        }
+
+        // Step 3: Initiate WhatsApp connection (QR code comes via Socket.IO)
+        statusText.textContent = 'Generating QR code...';
+        await WamatorAPI.post(`/connect/${appUser.id}/${phoneNumber}`);
+
+        // Show QR section, hide phone input
+        phoneInputSection.classList.add('hidden');
+        qrSection.classList.remove('hidden');
+        instructions.classList.remove('hidden');
+        statusText.textContent = 'Waiting for QR code...';
+      } catch (err) {
+        connectBtn.disabled = false;
+        connectBtn.innerHTML = '<span class="material-icons-outlined text-sm">qr_code_2</span> Generate QR Code';
+
+        const msg = err.message || 'Failed to start connection.';
+        if (msg.includes('already connected')) {
+          statusText.textContent = 'This number is already connected!';
+          setTimeout(() => { window.location.href = '/setup/step-3.html'; }, 1500);
+        } else {
+          connectError.textContent = msg;
+          connectError.classList.remove('hidden');
+          statusText.textContent = 'Connection failed. Try again.';
+        }
+      }
+    });
+  })();
+</script>
+</body></html>

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const http = require('http');
 const socketIo = require('socket.io');
 const pool = require('./src/config/db');
@@ -18,14 +19,21 @@ const connectRoutes = require('./src/routes/connect');
 const { clients } = require('./src/routes/connect');
 const publisherRoutes = require('./src/routes/publisher');
 const  contactRoutes = require('./src/routes/contacts');
+const sessionRoutes = require('./src/routes/session');
 
 const app = express();
 const server = http.createServer(app);
 
+// Allowed origins for CORS (must be defined before Socket.IO and Express CORS)
+const allowedOrigins = [
+  'http://localhost:8080',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 // Configure CORS for Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -58,16 +66,21 @@ app.set('io', io);
 app.set('activeConnections', activeConnections);
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+app.use(cookieParser());
 app.use(express.json());
 
 // Mount routes
 app.use('/vendors', vendorRoutes);
 app.use('/users', userRoutes);
-app.use('//whatsapp-numbers', whatsappNumberRoutes);
+app.use('/whatsapp-numbers', whatsappNumberRoutes);
 app.use('/connect', connectRoutes);
 app.use('/messages', publisherRoutes);
 app.use('/contacts', contactRoutes);
+app.use('/session', sessionRoutes);
 
 // Test route
 app.get('/', async (req, res) => {

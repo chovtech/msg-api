@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding Success | Wamator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="/assets/css/tailwind-config.js"></script>
+<link href="/assets/css/app.css" rel="stylesheet"/>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center p-6">
+<div class="max-w-xl w-full text-center">
+<div class="flex items-center justify-center gap-2 text-primary mb-12">
+<span class="material-icons-outlined text-4xl">hub</span>
+<span class="text-2xl font-bold tracking-tight">Wamator</span>
+</div>
+<div class="mb-8 relative inline-block">
+<div class="w-24 h-24 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto text-5xl float-animation">
+                🎉
+            </div>
+<div class="absolute -top-2 -left-4 text-primary opacity-40">
+<span class="material-symbols-outlined text-xl">auto_awesome</span>
+</div>
+<div class="absolute -bottom-2 -right-4 text-blue-400 opacity-40">
+<span class="material-symbols-outlined text-2xl">celebration</span>
+</div>
+</div>
+<h1 class="text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
+            You’re all set
+        </h1>
+<p class="text-lg text-slate-500 dark:text-slate-400 mb-12 max-w-sm mx-auto">
+            Your WhatsApp workspace is ready. You can now start automating your marketing workflows.
+        </p>
+<div class="flex flex-col gap-4 max-w-xs mx-auto">
+<a class="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 hover:scale-[1.02] transition-all duration-200 text-base" href="/dashboard/">
+                Go to dashboard
+                <span class="material-icons-outlined ml-2 text-lg">arrow_forward</span>
+</a>
+<button class="inline-flex items-center justify-center px-8 py-4 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 text-base">
+<span class="material-icons-outlined mr-2 text-lg">person_add</span>
+                Invite team members
+            </button>
+</div>
+<div class="mt-24 pt-8 border-t border-slate-200/60 dark:border-slate-800/60">
+<p class="text-sm text-slate-400 dark:text-slate-500">
+                Need help getting started? <a class="text-primary hover:underline" href="#">Read the quickstart guide</a>
+</p>
+</div>
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script>
+(async () => {
+  const auth = await WamatorAuth.requireAuth();
+  if (!auth) return;
+})();
+</script>
+
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none z-[-1] overflow-hidden opacity-20 dark:opacity-10">
+<div class="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[30%] h-[30%] bg-blue-400/20 blur-[100px] rounded-full"></div>
+</div>
+
+</body></html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wamator Dashboard Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="/assets/css/tailwind-config.js"></script>
+<link href="/assets/css/app.css" rel="stylesheet"/>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex">
+<!-- Sidebar -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark flex flex-col fixed h-full z-20">
+<div class="p-6">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-icons-outlined text-3xl">hub</span>
+<span class="text-xl font-bold tracking-tight">Wamator</span>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium" href="/dashboard/">
+<span class="material-icons-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="/dashboard/contacts.html">
+<span class="material-icons-outlined">people</span>
+                Contacts
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="/dashboard/automation.html">
+<span class="material-icons-outlined">auto_fix_high</span>
+                Automations
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-outlined">campaign</span>
+                Campaigns
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-outlined">phone_android</span>
+                Numbers
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-outlined">code</span>
+                API &amp; Webhooks
+            </a>
+<div class="pt-6 pb-2 px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Administration</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-outlined">group</span>
+                Team
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 p-2">
+<div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs" id="user-avatar">--</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-medium truncate" id="user-name">Loading...</p>
+<p class="text-xs text-slate-500 truncate" id="user-company">—</p>
+</div>
+<button onclick="WamatorAuth.logout()" class="text-slate-400 hover:text-red-500 transition-colors" title="Log out">
+<span class="material-icons-outlined text-xl">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 p-8">
+<!-- Header -->
+<header class="flex justify-between items-center mb-8">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">Dashboard Overview</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400">Welcome back! Here's what's happening today.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Search data..." type="text"/>
+</div>
+<button class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-icons-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+</div>
+</header>
+<!-- Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-50 dark:bg-primary/10 rounded-lg text-primary">
+<span class="material-icons-outlined">phone_iphone</span>
+</div>
+<span class="text-slate-500 text-xs font-medium flex items-center bg-slate-50 dark:bg-slate-500/10 px-2 py-1 rounded-full">
+<span class="material-icons-outlined text-xs mr-1">horizontal_rule</span> —
+                    </span>
+</div>
+<h3 class="text-slate-500 dark:text-slate-400 text-sm font-medium">Connected Numbers</h3>
+<p class="text-2xl font-bold mt-1" id="metric-numbers">—</p>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-indigo-50 dark:bg-indigo-500/10 rounded-lg text-indigo-500">
+<span class="material-icons-outlined">groups</span>
+</div>
+<span class="text-slate-500 text-xs font-medium flex items-center bg-slate-50 dark:bg-slate-500/10 px-2 py-1 rounded-full">
+<span class="material-icons-outlined text-xs mr-1">horizontal_rule</span> —
+                    </span>
+</div>
+<h3 class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Contacts</h3>
+<p class="text-2xl font-bold mt-1" id="metric-contacts">—</p>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-purple-50 dark:bg-purple-500/10 rounded-lg text-purple-500">
+<span class="material-icons-outlined">account_tree</span>
+</div>
+<span class="text-slate-500 text-xs font-medium flex items-center bg-slate-50 dark:bg-slate-500/10 px-2 py-1 rounded-full">
+<span class="material-icons-outlined text-xs mr-1">horizontal_rule</span> 0%
+                    </span>
+</div>
+<h3 class="text-slate-500 dark:text-slate-400 text-sm font-medium">Active Workflows</h3>
+<p class="text-2xl font-bold mt-1" id="metric-workflows">—</p>
+</div>
+<div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-amber-50 dark:bg-amber-500/10 rounded-lg text-amber-500">
+<span class="material-icons-outlined">send</span>
+</div>
+<span class="text-slate-500 text-xs font-medium flex items-center bg-slate-50 dark:bg-slate-500/10 px-2 py-1 rounded-full">
+<span class="material-icons-outlined text-xs mr-1">horizontal_rule</span> —
+                    </span>
+</div>
+<h3 class="text-slate-500 dark:text-slate-400 text-sm font-medium">Messages Sent Today</h3>
+<p class="text-2xl font-bold mt-1" id="metric-messages">—</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Recent Activity -->
+<div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+<h2 class="font-bold text-slate-800 dark:text-white">Recent Contacts</h2>
+</div>
+<div class="p-0">
+<ul id="recent-contacts" class="divide-y divide-slate-100 dark:divide-slate-700">
+<li class="p-8 text-center text-slate-400 text-sm">Loading...</li>
+</ul>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="space-y-6">
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-700">
+<h2 class="font-bold text-slate-800 dark:text-white text-lg">Quick Actions</h2>
+</div>
+<div class="p-6 grid grid-cols-1 gap-4">
+<button class="flex items-center gap-3 w-full p-3 rounded-lg bg-primary text-white font-semibold shadow-md shadow-primary/20 hover:bg-primary/90 transition-all text-sm">
+<span class="material-icons-outlined">add_circle</span>
+                            Create New Campaign
+                        </button>
+<button onclick="window.location.href='/dashboard/contacts.html'" class="flex items-center gap-3 w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-sm">
+<span class="material-icons-outlined">upload</span>
+                            Import Contacts
+                        </button>
+<button class="flex items-center gap-3 w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-sm">
+<span class="material-icons-outlined">router</span>
+                            Add Number Instance
+                        </button>
+<button class="flex items-center gap-3 w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-sm">
+<span class="material-icons-outlined">auto_awesome</span>
+                            New Workflow Template
+                        </button>
+</div>
+</div>
+<!-- Getting Started -->
+<div class="bg-gradient-to-br from-primary to-blue-600 rounded-xl p-6 text-white shadow-lg shadow-blue-500/10">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-white/80 text-xs font-medium uppercase tracking-wider">Getting Started</p>
+<h4 class="text-lg font-bold mt-1">Complete Setup</h4>
+</div>
+<span class="material-icons-outlined opacity-50 text-3xl">rocket_launch</span>
+</div>
+<div class="space-y-3 text-sm">
+<div id="setup-numbers" class="flex items-center gap-2">
+<span class="material-icons-outlined text-white/60 text-lg">radio_button_unchecked</span>
+<span class="text-white/80">Connect a WhatsApp number</span>
+</div>
+<div id="setup-contacts" class="flex items-center gap-2">
+<span class="material-icons-outlined text-white/60 text-lg">radio_button_unchecked</span>
+<span class="text-white/80">Import your contacts</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-icons-outlined text-white/60 text-lg">radio_button_unchecked</span>
+<span class="text-white/80">Send your first message</span>
+</div>
+</div>
+<button onclick="window.location.href='/setup/step-2.html'" class="mt-4 w-full py-2 bg-white text-primary font-bold rounded-lg text-sm hover:bg-opacity-90 transition-all">
+                        Continue Setup
+                    </button>
+</div>
+</div>
+</div>
+<!-- Bottom Banner/Notice -->
+<footer class="mt-12 py-6 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-400">
+<p>&copy; 2026 Wamator Automation CRM. All rights reserved.</p>
+<div class="flex gap-4">
+<a class="hover:text-primary transition-colors" href="#">Support Center</a>
+<a class="hover:text-primary transition-colors" href="#">Terms &amp; Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">API Documentation</a>
+</div>
+</footer>
+</main>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script>
+  (async () => {
+    const auth = await WamatorAuth.requireAuth();
+    if (!auth) return;
+    const { vendor, appUser } = auth;
+
+    // Populate sidebar profile
+    const initials = vendor.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    document.getElementById('user-avatar').textContent = initials;
+    document.getElementById('user-name').textContent = vendor.name;
+    document.getElementById('user-company').textContent = vendor.company_name || 'Vendor';
+
+    // Fetch metrics in parallel
+    if (appUser) {
+      const [contactsData, numbersData] = await Promise.allSettled([
+        WamatorAPI.get(`/contacts/${appUser.id}/list?limit=1`),
+        WamatorAPI.get(`/whatsapp-numbers/${appUser.id}/list`),
+      ]);
+
+      if (contactsData.status === 'fulfilled') {
+        const total = contactsData.value.pagination?.total || 0;
+        document.getElementById('metric-contacts').textContent = total.toLocaleString();
+        if (total > 0) {
+          document.getElementById('setup-contacts').querySelector('.material-icons-outlined').textContent = 'check_circle';
+        }
+
+        // Populate recent contacts list
+        const recentList = document.getElementById('recent-contacts');
+        const recentContacts = contactsData.value.data || [];
+        if (recentContacts.length > 0) {
+          recentList.innerHTML = recentContacts.slice(0, 5).map(c => {
+            const initials = (c.name || c.phone_number || '?').substring(0, 2).toUpperCase();
+            return '<li class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-center gap-4">' +
+              '<div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs flex-shrink-0">' + initials + '</div>' +
+              '<div class="flex-1">' +
+              '<p class="text-sm font-medium">' + (c.name || 'Unnamed') + '</p>' +
+              '<p class="text-xs text-slate-400 mt-0.5">' + (c.phone_number || '') + '</p>' +
+              '</div>' +
+              '<span class="text-xs text-slate-400">' + (c.created_at ? new Date(c.created_at).toLocaleDateString() : '') + '</span>' +
+              '</li>';
+          }).join('');
+        } else {
+          recentList.innerHTML = '<li class="p-8 text-center"><p class="text-slate-400 text-sm">No contacts yet.</p><a href="/setup/step-3.html" class="text-primary text-sm font-medium hover:underline mt-1 inline-block">Import contacts</a></li>';
+        }
+      }
+
+      if (numbersData.status === 'fulfilled') {
+        const nums = numbersData.value.data || [];
+        const active = nums.filter(n => n.is_active).length;
+        document.getElementById('metric-numbers').textContent = active;
+        if (active > 0) {
+          document.getElementById('setup-numbers').querySelector('.material-icons-outlined').textContent = 'check_circle';
+        }
+      }
+    }
+
+    // Placeholder for metrics without backend endpoints yet
+    document.getElementById('metric-workflows').textContent = '0';
+    document.getElementById('metric-messages').textContent = '0';
+  })();
+</script>
+</body></html>

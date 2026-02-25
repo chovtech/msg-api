@@ -2,7 +2,8 @@ const db = require('../config/db');
 
 const authVendor = async (req, res, next) => {
   try {
-    const apiKey = req.header('x-api-key'); // Look for api_key in the header
+    // Check header first (for external API consumers), then fall back to httpOnly cookie (for frontend)
+    const apiKey = req.header('x-api-key') || (req.cookies && req.cookies['wamator_api_key']);
 
     if (!apiKey) {
       return res.status(401).json({ message: 'API Key required' });

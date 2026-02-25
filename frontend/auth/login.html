@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Wamator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="/assets/css/tailwind-config.js"></script>
+<link href="/assets/css/app.css" rel="stylesheet"/>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center p-6">
+
+<div class="w-full max-w-md">
+  <div class="text-center mb-10">
+    <div class="flex items-center justify-center gap-2 text-primary mb-4">
+      <span class="material-symbols-outlined text-4xl font-bold">hub</span>
+      <span class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Wamator</span>
+    </div>
+    <p class="text-slate-500 dark:text-slate-400 font-medium">WhatsApp automation for growth teams</p>
+  </div>
+
+  <div class="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-8 shadow-sm">
+    <div id="error-banner" class="hidden mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-600 dark:text-red-400"></div>
+
+    <form id="login-form" class="space-y-6" onsubmit="return false;">
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="email">Email</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
+          <input class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm form-input-focus" id="email" name="email" placeholder="name@company.com" type="email" required/>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2" for="password">Password</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">lock</span>
+          <input class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm form-input-focus" id="password" name="password" placeholder="••••••••" type="password" required/>
+          <button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" type="button" onclick="togglePassword()">
+            <span class="material-symbols-outlined text-xl" id="toggle-icon">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <button id="submit-btn" class="w-full py-3.5 px-4 bg-primary hover:bg-blue-600 text-green font-bold rounded-xl shadow-lg shadow-blue-500/25 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+        <span id="btn-text">Log in</span>
+        <span id="btn-spinner" class="spinner hidden"></span>
+      </button>
+    </form>
+
+    <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
+      <p class="text-sm text-slate-500 dark:text-slate-400">
+        Don't have an account?
+        <a class="text-primary font-bold hover:underline" href="/auth/sign-up.html">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script>
+  // If already authenticated, redirect to dashboard
+  WamatorAuth.redirectIfAuthenticated('/dashboard/');
+
+  function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('toggle-icon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = 'visibility_off';
+    } else {
+      input.type = 'password';
+      icon.textContent = 'visibility';
+    }
+  }
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorBanner = document.getElementById('error-banner');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const submitBtn = document.getElementById('submit-btn');
+
+    errorBanner.classList.add('hidden');
+    btnText.textContent = 'Logging in...';
+    btnSpinner.classList.remove('hidden');
+    submitBtn.disabled = true;
+
+    try {
+      const data = await WamatorAPI.post('/session/login', {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+      });
+
+      WamatorAuth.setVendor(data.vendor);
+      window.location.href = '/dashboard/';
+    } catch (err) {
+      errorBanner.textContent = err.message || 'Login failed. Please try again.';
+      errorBanner.classList.remove('hidden');
+      btnText.textContent = 'Log in';
+      btnSpinner.classList.add('hidden');
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+</body></html>

@@ -37,6 +37,17 @@ router.post('/register', authVendor, async (req, res) => {
       [api_consumer_id, external_user_id || null, normalizedName, normalizedCompanyName, normalizedEmail]
     );
 
+    // Auto-assign Free Plan subscription (plan_id 7, duration_days=0 = no expiry)
+    try {
+      await db.query(
+        `INSERT INTO subscriptions (app_user_id, plan_id, started_at, ends_at, status)
+         VALUES (?, 7, NOW(), DATE_ADD(NOW(), INTERVAL 100 YEAR), 'active')`,
+        [result.insertId]
+      );
+    } catch (subErr) {
+      console.error('Failed to auto-assign Free Plan:', subErr.message);
+    }
+
     return res.status(201).json({
       status: 'ok',
       message: 'User registered successfully',
@@ -175,7 +186,43 @@ router.delete('/:id', authVendor, async (req, res) => {
   }
 });
 
+// POST /users/:id/ensure-subscription — Ensure user has at least a Free Plan subscription
+router.post('/:id/ensure-subscription', authVendor, async (req, res) => {
+  try {
+    const api_consumer_id = req.apiConsumerId;
+    const userId = req.params.id;
 
+    // Verify user belongs to vendor
+    const [user] = await db.query(
+      'SELECT id FROM app_users WHERE id = ? AND api_consumer_id = ?',
+      [userId, api_consumer_id]
+    );
+    if (!user.length) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if active subscription already exists
+    const [existing] = await db.query(
+      `SELECT id FROM subscriptions WHERE app_user_id = ? AND status = 'active' AND ends_at > NOW()`,
+      [userId]
+    );
+    if (existing.length) {
+      return res.json({ status: 'ok', message: 'Active subscription already exists' });
+    }
+
+    // Auto-assign Free Plan (plan_id 7)
+    await db.query(
+      `INSERT INTO subscriptions (app_user_id, plan_id, started_at, ends_at, status)
+       VALUES (?, 7, NOW(), DATE_ADD(NOW(), INTERVAL 100 YEAR), 'active')`,
+      [userId]
+    );
+
+    return res.status(201).json({ status: 'ok', message: 'Free Plan subscription created' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 module.exports = router;

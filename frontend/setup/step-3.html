@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wamator - Import Contacts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="/assets/css/tailwind-config.js"></script>
+<link href="/assets/css/app.css" rel="stylesheet"/>
+</head>
+<body class="font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<nav class="w-full border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4">
+<div class="max-w-5xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-icons-outlined text-2xl">hub</span>
+<span class="text-lg font-bold tracking-tight">Wamator</span>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs">
+<span class="material-icons-outlined text-sm">check</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Account</span>
+</div>
+<div class="w-8 h-px bg-slate-200"></div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs">
+<span class="material-icons-outlined text-sm">check</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Number</span>
+</div>
+<div class="w-8 h-px bg-slate-200"></div>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">3</div>
+<span class="text-sm font-bold text-slate-900 dark:text-white">Contacts</span>
+</div>
+</div>
+<div class="w-24"></div> 
+</div>
+</nav>
+<main class="flex-1 flex flex-col items-center justify-center p-6 sm:p-12">
+<div class="w-full max-w-4xl">
+<div class="text-center mb-10">
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Add your contacts</h1>
+<p class="text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
+                Populate your CRM to start automating your growth. You can import your existing list or add them one by one.
+            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 flex flex-col shadow-sm hover:border-primary/50 transition-colors group">
+<div class="mb-6 flex items-center justify-between">
+<div class="p-3 bg-blue-50 dark:bg-primary/10 rounded-xl text-primary">
+<span class="material-symbols-outlined text-3xl">upload_file</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-slate-400">Recommended</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Import CSV</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Bulk upload thousands of contacts from a spreadsheet.</p>
+<div class="flex-1 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-8 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/50 group-hover:bg-slate-100 dark:group-hover:bg-slate-800 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-slate-400 mb-3 text-4xl">cloud_upload</span>
+<p class="text-sm font-medium text-slate-600 dark:text-slate-300">Click to upload or drag and drop</p>
+<p class="text-xs text-slate-400 mt-1">CSV, XLSX up to 10MB</p>
+<input class="hidden" id="file-upload" type="file"/>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 flex flex-col shadow-sm hover:border-primary/50 transition-colors group">
+<div class="mb-6">
+<div class="p-3 bg-indigo-50 dark:bg-indigo-500/10 rounded-xl text-indigo-500 inline-flex">
+<span class="material-symbols-outlined text-3xl">person_add</span>
+</div>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Add manually</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Quickly add a single contact to test your workflows.</p>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Full Name</label>
+<input id="manual-name" class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary" placeholder="e.g. John Doe" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">WhatsApp Number</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">+</span>
+<input id="manual-phone" class="w-full pl-7 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary" placeholder="1234567890" type="tel"/>
+</div>
+</div>
+<button id="add-contact-btn" class="w-full py-2.5 px-4 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold rounded-lg text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2 mt-2">
+<span class="material-icons-outlined text-sm">add</span>
+                        Add Contact
+                    </button>
+<p id="manual-result" class="text-xs text-center hidden"></p>
+</div>
+</div>
+</div>
+<div class="mt-10 flex items-center justify-center gap-3 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-xl text-green-500">verified_user</span>
+<p class="text-sm">Contacts are stored securely and can be edited later.</p>
+</div>
+</div>
+</main>
+<footer class="w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-6">
+<div class="max-w-5xl mx-auto flex justify-between items-center">
+<button onclick="window.location.href='/setup/step-2.html'" class="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2">
+<span class="material-icons-outlined text-sm">arrow_back</span>
+            Back to previous step
+        </button>
+<div class="flex items-center gap-4">
+<button onclick="window.location.href='/setup/step-4.html'" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 font-medium text-sm mr-4">
+                Skip for now
+            </button>
+<button onclick="window.location.href='/setup/step-4.html'" class="px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2">
+                Continue
+                <span class="material-icons-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</footer>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script>
+  let appUser = null;
+
+  (async () => {
+    const auth = await WamatorAuth.requireAuth();
+    if (!auth) return;
+    appUser = auth.appUser;
+  })();
+
+  // CSV Upload
+  const fileInput = document.getElementById('file-upload');
+  const uploadArea = fileInput.closest('.flex-1');
+
+  uploadArea.addEventListener('click', () => fileInput.click());
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('border-primary'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('border-primary'));
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('border-primary');
+    if (e.dataTransfer.files.length) {
+      fileInput.files = e.dataTransfer.files;
+      handleCSVUpload(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length) handleCSVUpload(e.target.files[0]);
+  });
+
+  async function handleCSVUpload(file) {
+    if (!appUser) return;
+    const text = await file.text();
+    const lines = text.trim().split('\n');
+    if (lines.length < 2) return alert('CSV must have a header row and at least one contact.');
+
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const nameIdx = headers.findIndex(h => h === 'name' || h === 'full name' || h === 'fullname');
+    const phoneIdx = headers.findIndex(h => h === 'phone' || h === 'phone_number' || h === 'phone number' || h === 'whatsapp');
+    const emailIdx = headers.findIndex(h => h === 'email');
+
+    if (phoneIdx === -1) return alert('CSV must have a "phone" or "phone_number" column.');
+
+    const contacts = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',').map(c => c.trim());
+      if (!cols[phoneIdx]) continue;
+      contacts.push({
+        name: nameIdx >= 0 ? cols[nameIdx] : '',
+        phone_number: cols[phoneIdx],
+        email: emailIdx >= 0 ? cols[emailIdx] : '',
+      });
+    }
+
+    if (!contacts.length) return alert('No valid contacts found in CSV.');
+
+    try {
+      const data = await WamatorAPI.post(`/contacts/${appUser.id}/add`, contacts);
+      alert(data.message || `${contacts.length} contact(s) imported!`);
+    } catch (err) {
+      alert(err.message || 'Import failed.');
+    }
+  }
+
+  // Manual add contact
+  document.getElementById('add-contact-btn').addEventListener('click', async () => {
+    if (!appUser) return;
+    const name = document.getElementById('manual-name').value.trim();
+    const phone = document.getElementById('manual-phone').value.trim();
+    const resultEl = document.getElementById('manual-result');
+
+    if (!name || !phone) {
+      resultEl.textContent = 'Name and phone number are required.';
+      resultEl.className = 'text-xs text-center text-red-500';
+      resultEl.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      const data = await WamatorAPI.post(`/contacts/${appUser.id}/add`, {
+        name,
+        phone_number: phone,
+      });
+      resultEl.textContent = data.message || 'Contact added!';
+      resultEl.className = 'text-xs text-center text-green-600';
+      resultEl.classList.remove('hidden');
+      document.getElementById('manual-name').value = '';
+      document.getElementById('manual-phone').value = '';
+    } catch (err) {
+      resultEl.textContent = err.message || 'Failed to add contact.';
+      resultEl.className = 'text-xs text-center text-red-500';
+      resultEl.classList.remove('hidden');
+    }
+  });
+</script>
+</body></html>

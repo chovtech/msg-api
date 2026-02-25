@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wamator Onboarding: Workspace Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="/assets/css/tailwind-config.js"></script>
+<link href="/assets/css/app.css" rel="stylesheet"/>
+</head>
+<body class="min-h-screen flex flex-col">
+<nav class="p-6">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-icons-outlined text-3xl">hub</span>
+<span class="text-xl font-bold tracking-tight">Wamator</span>
+</div>
+<div class="text-sm text-slate-500 font-medium">
+                Need help? <a class="text-primary hover:underline" href="#">Contact Support</a>
+</div>
+</div>
+</nav>
+<main class="flex-1 flex items-center justify-center p-4 -mt-12">
+<div class="w-full max-w-md">
+<div class="mb-8">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Step 1 of 4</span>
+<span class="text-xs font-medium text-slate-400">25% Complete</span>
+</div>
+<div class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-1/4 rounded-full transition-all duration-500"></div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-8 md:p-10">
+<div class="mb-8 text-center">
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Set up your workspace</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm">
+                        Let's start by naming your organization and defining your location.
+                    </p>
+</div>
+<form class="space-y-6">
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5" for="workspace-name">
+                            Workspace / Organization Name <span class="text-red-500">*</span>
+</label>
+<input class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-400 form-input-focus" id="workspace-name" name="workspace-name" placeholder="e.g. Acme Marketing" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5" for="industry">
+                            Industry <span class="text-xs font-normal text-slate-400">(Optional)</span>
+</label>
+<div class="relative">
+<select class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white appearance-none form-input-focus" id="industry" name="industry">
+<option disabled="" selected="" value="">Select industry</option>
+<option value="marketing">Marketing &amp; Advertising</option>
+<option value="ecommerce">E-commerce</option>
+<option value="technology">Technology &amp; SaaS</option>
+<option value="realestate">Real Estate</option>
+<option value="other">Other</option>
+</select>
+<span class="material-icons-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5" for="country">
+                            Country <span class="text-xs font-normal text-slate-400">(Optional)</span>
+</label>
+<div class="relative">
+<select class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white appearance-none form-input-focus" id="country" name="country">
+<option disabled="" selected="" value="">Select country</option>
+<option value="us">United States</option>
+<option value="uk">United Kingdom</option>
+<option value="in">India</option>
+<option value="br">Brazil</option>
+<option value="ae">United Arab Emirates</option>
+</select>
+<span class="material-icons-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">public</span>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group" type="submit">
+                            Continue
+                            <span class="material-icons-outlined text-lg transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<div class="mt-8 flex items-start gap-3 p-4 bg-blue-50/50 dark:bg-primary/5 rounded-xl border border-blue-100/50 dark:border-primary/10">
+<span class="material-icons-outlined text-primary text-xl">lightbulb</span>
+<p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Don't worry, you can change your workspace settings anytime later from your dashboard under <span class="font-semibold">Administration &gt; Settings</span>.
+                </p>
+</div>
+</div>
+</main>
+<footer class="p-6 text-center text-xs text-slate-400">
+<p>&copy; 2026 Wamator Automation CRM. All rights reserved.</p>
+</footer>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script>
+  // Require authentication for setup pages
+  (async () => {
+    const auth = await WamatorAuth.requireAuth();
+    if (!auth) return;
+  })();
+
+  document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Store workspace config locally for future use
+    const workspaceName = document.getElementById('workspace-name').value;
+    const industry = document.getElementById('industry').value;
+    const country = document.getElementById('country').value;
+
+    sessionStorage.setItem('wamator_workspace', JSON.stringify({
+      workspace_name: workspaceName,
+      industry: industry,
+      country: country,
+    }));
+
+    window.location.href = '/setup/step-2.html';
+  });
+</script>
+</body></html>
